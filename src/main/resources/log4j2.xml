@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout disableAnsi="false">
+                <Pattern>
+                    %highlight{[%d{HH:mm:ss}] [%level] [%logger{0}] %msg%n}{
+                    FATAL=red,
+                    ERROR=red,
+                    WARN=bright_red,
+                    INFO=blue,
+                    DEBUG=white,
+                    TRACE=white
+                    }
+                </Pattern>
+            </PatternLayout>
+        </Console>
+
+        <!-- 文件输出 -->
+        <RollingFile name="RollingFile" fileName="logs/latest.log"
+                     filePattern="logs/log.%d{yyyy-MM-dd_HH}.log.gz">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] [%level] [%logger{0}] %msg%n"/>
+            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            <DefaultRolloverStrategy max="24"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- 指定日志等级和禁用某些包的日志 -->
+        <Logger name="org.eclipse.jetty" level="off" additivity="false"/>
+        <Logger name="io.javalin" level="error" additivity="false"/>
+
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
